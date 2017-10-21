@@ -1,0 +1,21 @@
+body {
+	background-color: beige;
+}
+#app{
+	text-align: center;
+}
+.user-label{
+	position: relative;
+	display: inline-block;
+}
+.avatar{
+	display: block;
+
+}
+textarea{
+	margin-bottom: 10px;
+	display:block;
+}
+button:first-of-type{
+	margin-right: 10px;
+}
