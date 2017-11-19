@@ -1,7 +1,34 @@
 {
-	"user1":{
-		"author":"Pyotr",
-		"avatar":"",
-		"text":"comment"	
-		}
+	"users":[
+		{
+	    "author": "user1",
+	    "avatar": "",
+	    "text": "sometext"
+
+	  },
+	  {
+	    "author": "user2",
+	    "avatar": "",
+	    "text": "sometext"
+
+	  },
+	  {
+	    "author": "user3",
+	    "avatar": "",
+	    "text": "sometext"
+
+	  },
+	  {
+	    "author": "user4",
+	    "avatar": "",
+	    "text": "sometext"
+
+	  },
+	  {
+	    "author": "user5",
+	    "avatar": "",
+	    "text": "sometext"
+
+	  }
+	]
 }

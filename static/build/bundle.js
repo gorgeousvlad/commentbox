@@ -10207,42 +10207,16 @@ var _reactDom2 = _interopRequireDefault(_reactDom);
 var _components = __webpack_require__(196);
 
 function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { default: obj };
+    return obj && obj.__esModule ? obj : { default: obj };
 }
 
-var testData = [{
-  author: "user1",
-  avatar: '',
-  text: "sometext"
-
-}, {
-  author: "user2",
-  avatar: '',
-  text: "sometext"
-
-}, {
-  author: "user3",
-  avatar: '',
-  text: "sometext"
-
-}, {
-  author: "user4",
-  avatar: '',
-  text: "sometext"
-
-}, {
-  author: "user5",
-  avatar: '',
-  text: "sometext"
-
-}];
 var curUser = {
-  author: "curUser",
-  avatar: '',
-  text: "sometext"
+    author: "curUser",
+    avatar: '',
+    text: "sometext"
 };
 
-_reactDom2.default.render(_react2.default.createElement(_components.Comments, { url: "comments.json", data: testData, curUser: curUser }), document.getElementById("app"));
+_reactDom2.default.render(_react2.default.createElement(_components.CommentContainer, { url: "users.json", curUser: curUser }), document.getElementById("app"));
 
 /***/ }),
 /* 86 */
@@ -22920,9 +22894,7 @@ module.exports = ReactDOMInvalidARIAHook;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Comments = undefined;
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+exports.CommentContainer = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -22932,50 +22904,58 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Comments = exports.Comments = function (_React$Component) {
-  _inherits(Comments, _React$Component);
+var CommentContainer = exports.CommentContainer = function (_React$Component) {
+  _inherits(CommentContainer, _React$Component);
 
-  function Comments(props) {
-    _classCallCheck(this, Comments);
+  function CommentContainer(props) {
+    _classCallCheck(this, CommentContainer);
 
-    var _this = _possibleConstructorReturn(this, (Comments.__proto__ || Object.getPrototypeOf(Comments)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (CommentContainer.__proto__ || Object.getPrototypeOf(CommentContainer)).call(this, props));
 
-    _this.state = _extends({}, props);
+    _this.timeout = 5000;
+    _this.state = { data: [] };
     return _this;
   }
-  // componentDidMount(){
-  //   var xhr = new XMLHttpRequest();
-  //   xhr.open("GET",this.props.url,true);
-  //   xhr.timeout = 5000;
-  //   xhr.onreadystatechange = () => {
-  //     console.log(xhr)
-  //     if (xhr.readyState != 4) return;
-  //     if (xhr.status != 200){
-  //       console.error(xhr.status,xhr.statusText)
-  //     }
-  //     else{
-  //       console.log(xhr.getAllResponseHeaders());
-  //       this.setState(xhr.responseText);
-  //     }
-  //   }.bind(this)
-  //   xhr.send(commentInfo);
-  // }
 
-
-  _createClass(Comments, [{
-    key: "postInfo",
-    value: function postInfo(commentInfo) {
+  _createClass(CommentContainer, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
       var _this2 = this;
 
       var xhr = new XMLHttpRequest();
+      xhr.open("GET", this.props.url, true);
+      xhr.timeout = this.timeout;
+      xhr.onreadystatechange = function () {
+        console.log(xhr);
+        if (xhr.readyState != 4) return;
+        if (xhr.status != 200) {
+          console.error(xhr.status, xhr.statusText);
+        } else {
+          console.log(JSON.parse(xhr.responseText).users);
+          _this2.setState({ data: JSON.parse(xhr.responseText).users });
+        }
+      }.bind(this);
+      xhr.send();
+    }
+  }, {
+    key: "postInfo",
+    value: function postInfo(commentInfo) {
+      var _this3 = this;
+
+      var message = [].concat(_toConsumableArray(this.state.data), [commentInfo]),
+          xhr = new XMLHttpRequest();
       xhr.open("POST", this.props.url, true);
-      xhr.timeout = 5000;
+      xhr.timeout = this.timeout;
       xhr.onreadystatechange = function () {
         console.log(xhr);
         if (xhr.readyState != 4) return;
@@ -22983,25 +22963,32 @@ var Comments = exports.Comments = function (_React$Component) {
           console.error(xhr.status, xhr.statusText);
         } else {
           console.log(xhr.getAllResponseHeaders());
-          _this2.setState(xhr.responseText);
+          _this3.setState({ data: JSON.parse(xhr.responseText).users });
         }
       }.bind(this);
-      xhr.send(commentInfo);
+      xhr.send(message);
     }
   }, {
     key: "render",
     value: function render() {
-      return _react2.default.createElement(
-        "div",
-        { className: "comments-container" },
-        _react2.default.createElement(CommentList, { data: this.state.data }),
-        _react2.default.createElement(CommentBox, Object.assign({}, this.state.curUser, { onSubmit: this.postInfo.bind(this) }))
-      );
+      return _react2.default.createElement(Comments, {
+        data: this.state.data,
+        curUser: this.props.curUser,
+        onSubmit: this.postInfo.bind(this) });
     }
   }]);
 
-  return Comments;
+  return CommentContainer;
 }(_react2.default.Component);
+
+var Comments = function Comments(props) {
+  return _react2.default.createElement(
+    "div",
+    { className: "comments-container" },
+    _react2.default.createElement(CommentList, { data: props.data }),
+    _react2.default.createElement(CommentBox, Object.assign({}, props.curUser, { onSubmit: props.onSubmit }))
+  );
+};
 
 var CommentBox = function (_React$Component2) {
   _inherits(CommentBox, _React$Component2);
@@ -23009,11 +22996,11 @@ var CommentBox = function (_React$Component2) {
   function CommentBox(props) {
     _classCallCheck(this, CommentBox);
 
-    var _this3 = _possibleConstructorReturn(this, (CommentBox.__proto__ || Object.getPrototypeOf(CommentBox)).call(this, props));
+    var _this4 = _possibleConstructorReturn(this, (CommentBox.__proto__ || Object.getPrototypeOf(CommentBox)).call(this, props));
 
-    _this3.state = { value: "" };
-    _this3._onChange = _this3._onChange.bind(_this3);
-    return _this3;
+    _this4.state = { value: "" };
+    _this4._onChange = _this4._onChange.bind(_this4);
+    return _this4;
   }
 
   _createClass(CommentBox, [{
@@ -23026,7 +23013,12 @@ var CommentBox = function (_React$Component2) {
     value: function _onSubmit(ev) {
       console.log("SUBMT");
       ev.preventDefault();
-      this.props.onSubmit(Object.assign({}, this.props, { text: this.state.value }));
+
+      var _props = this.props,
+          onSubmit = _props.onSubmit,
+          info = _objectWithoutProperties(_props, ["onSubmit"]);
+
+      this.props.onSubmit(Object.assign({}, info, { "text": this.state.value }));
       this.setState({ value: "" });
     }
   }, {
@@ -23053,7 +23045,7 @@ var CommentBox = function (_React$Component2) {
               _react2.default.createElement("textarea", { className: "form-control", cols: "3", rows: "6", id: "inp", onChange: this._onChange.bind(this), value: this.state.value }),
               _react2.default.createElement(
                 "button",
-                { type: "submit", disabled: "disabled", className: "btn btn-success btn-sm" },
+                { type: "submit", disabled: this.state.value ? '' : 'disabled', className: "btn btn-success btn-sm" },
                 "Post"
               ),
               _react2.default.createElement(
@@ -23112,7 +23104,7 @@ var CommentList = function (_React$Component3) {
       var comments = this.props.data.map(function (record, index) {
         return _react2.default.createElement(
           Comment,
-          { key: index, avatar: record.avatar, author: record.author },
+          { key: "comment-" + index, avatar: record.avatar, author: record.author },
           record.text
         );
       });

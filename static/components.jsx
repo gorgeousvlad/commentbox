@@ -1,30 +1,33 @@
 import React from "react";
-export class Comments extends React.Component{
+
+export class CommentContainer extends React.Component{
   constructor(props){
     super(props);
-    this.state = {...props}
+    this.timeout = 5000;
+    this.state = {data: []};
   }
-  // componentDidMount(){
-  //   var xhr = new XMLHttpRequest();
-  //   xhr.open("GET",this.props.url,true);
-  //   xhr.timeout = 5000;
-  //   xhr.onreadystatechange = () => {
-  //     console.log(xhr)
-  //     if (xhr.readyState != 4) return;
-  //     if (xhr.status != 200){
-  //       console.error(xhr.status,xhr.statusText)
-  //     }
-  //     else{
-  //       console.log(xhr.getAllResponseHeaders());
-  //       this.setState(xhr.responseText);
-  //     }
-  //   }.bind(this)
-  //   xhr.send(commentInfo);
-  // }
+  componentDidMount(){
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET",this.props.url,true);
+    xhr.timeout = this.timeout;
+    xhr.onreadystatechange = (() => {
+      console.log(xhr)
+      if (xhr.readyState != 4) return;
+      if (xhr.status != 200){
+        console.error(xhr.status,xhr.statusText)
+      }
+      else{
+        console.log(JSON.parse(xhr.responseText).users);
+        this.setState({data: JSON.parse(xhr.responseText).users});
+      }
+    }).bind(this)
+    xhr.send();
+  }
   postInfo(commentInfo){
-    var xhr = new XMLHttpRequest();
+    let message = [...this.state.data, commentInfo],
+      xhr = new XMLHttpRequest();
     xhr.open("POST",this.props.url,true);
-    xhr.timeout = 5000;
+    xhr.timeout = this.timeout;
     xhr.onreadystatechange = (() => {
       console.log(xhr)
       if (xhr.readyState != 4) return;
@@ -33,23 +36,31 @@ export class Comments extends React.Component{
       }
       else{
         console.log(xhr.getAllResponseHeaders());
-        this.setState(xhr.responseText);
+        this.setState({data: JSON.parse(xhr.responseText).users});
       }
     }).bind(this)
-    xhr.send(commentInfo);
+    xhr.send(message);
   }
   render(){
-    return(
-      <div className = 'comments-container'>
-        <CommentList data = {this.state.data}/>
-        <CommentBox 
-          {...Object.assign({},this.state.curUser,{onSubmit: this.postInfo.bind(this)})}
-        />
-      </div>
-
+    return (
+      <Comments 
+        data = {this.state.data} 
+        curUser = {this.props.curUser} 
+        onSubmit = {this.postInfo.bind(this)}/>
       )
   }
 }
+const Comments = (props) => {
+  return(
+    <div className = 'comments-container'>
+      <CommentList data = {props.data}/>
+      <CommentBox 
+        {...Object.assign({}, props.curUser,{onSubmit: props.onSubmit})}
+      />
+    </div>
+    )
+};
+
 class CommentBox extends React.Component {
   constructor(props){
     super(props);
@@ -62,7 +73,8 @@ class CommentBox extends React.Component {
   _onSubmit(ev){
       console.log("SUBMT")
       ev.preventDefault();
-      this.props.onSubmit(Object.assign({}, this.props, {text: this.state.value}))
+      let {onSubmit,...info} = this.props;
+      this.props.onSubmit(Object.assign({}, info, {"text": this.state.value}))
       this.setState({value:""});
   }
   _onClickClear(ev){
@@ -76,7 +88,7 @@ class CommentBox extends React.Component {
         <div className = 'form-group'>
           <div className="col-md-6 col-sm-6">
             <textarea className = 'form-control' cols = "3" rows = "6" id = 'inp' onChange = {this._onChange.bind(this)} value = {this.state.value}></textarea>
-            <button type = 'submit' disabled = 'disabled' className = 'btn btn-success btn-sm'>Post</button>
+            <button type = 'submit' disabled = {this.state.value? '' : 'disabled'} className = 'btn btn-success btn-sm'>Post</button>
             <button type = 'button' className = 'btn btn-danger btn-sm' onClick = {this._onClickClear.bind(this)}>Clear</button>
           </div>
         </div>
@@ -109,7 +121,7 @@ class CommentList extends React.Component{
   render(){
     let comments = this.props.data.map((record, index) => {
       return (
-      <Comment key = {index} avatar = {record.avatar} author = {record.author}>
+      <Comment key = {`comment-${index}`} avatar = {record.avatar} author = {record.author}>
         {record.text}
       </Comment>
       );
