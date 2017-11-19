@@ -53,7 +53,7 @@ export class CommentContainer extends React.Component{
 const Comments = (props) => {
   return(
     <div className = 'comments-container'>
-      <CommentList data = {props.data}/>
+        <CommentList data = {props.data}/>
       <CommentBox 
         {...Object.assign({}, props.curUser,{onSubmit: props.onSubmit})}
       />
@@ -86,14 +86,12 @@ class CommentBox extends React.Component {
       <CommentLabel {...this.props}/>
       <form className = 'form-horizontal text-right' role = 'form' onSubmit = {this._onSubmit.bind(this)}>
         <div className = 'form-group'>
-          <div className="col-md-6 col-sm-6">
             <textarea className = 'form-control' cols = "3" rows = "6" id = 'inp' onChange = {this._onChange.bind(this)} value = {this.state.value}></textarea>
             <button type = 'submit' disabled = {this.state.value? '' : 'disabled'} className = 'btn btn-success btn-sm'>Post</button>
             <button type = 'button' className = 'btn btn-danger btn-sm' onClick = {this._onClickClear.bind(this)}>Clear</button>
-          </div>
-        </div>
-      </form>
-    </div>
+      </div>
+    </form>
+  </div>
     );
   }
 };
@@ -101,7 +99,9 @@ var CommentLabel = (props) =>{
   return (
       <div className = "label-outer">
         <img className = "avatar" src = {props.avatar} />
-        <div className = 'user-label'>{props.author}</div>
+        <div className = 'user-label'>
+        <a href = {props.home}>{props.author}</a>
+        </div>
       </div>
   );
 };

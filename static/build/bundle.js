@@ -10213,7 +10213,8 @@ function _interopRequireDefault(obj) {
 var curUser = {
     author: "curUser",
     avatar: '',
-    text: "sometext"
+    text: "sometext",
+    home: "http://www.example.com"
 };
 
 _reactDom2.default.render(_react2.default.createElement(_components.CommentContainer, { url: "users.json", curUser: curUser }), document.getElementById("app"));
@@ -10420,7 +10421,7 @@ exports = module.exports = __webpack_require__(49)(undefined);
 
 
 // module
-exports.push([module.i, "body {\n  background-color: beige; }\n\n#app {\n  text-align: center; }\n\n.user-label {\n  position: relative;\n  display: inline-block; }\n\n.avatar {\n  display: block; }\n\ntextarea {\n  margin-bottom: 10px;\n  display: block; }\n\nbutton:first-of-type {\n  margin-right: 10px; }\n", ""]);
+exports.push([module.i, "body {\n  background-color: beige; }\n\n#app {\n  text-align: left;\n  padding: 20px; }\n\n.container {\n  margin-top: 5%; }\n\ntextarea {\n  margin-bottom: 10px;\n  display: block; }\n\nbutton:first-of-type {\n  margin-right: 10px; }\n\n.label-outer {\n  text-align: left; }\n  .label-outer .user-label {\n    position: relative;\n    display: inline-block;\n    font-size: 24px;\n    color: blue;\n    margin-left: 1%;\n    vertical-align: top; }\n  .label-outer .avatar {\n    position: relative;\n    display: inline-block;\n    width: 50px;\n    height: 50px;\n    background-color: green; }\n\n.comment {\n  min-height: 80px;\n  text-align: left;\n  font-size: 20px;\n  margin: 2% 0;\n  background-color: white; }\n\n.comment-list {\n  width: 500px; }\n", ""]);
 
 // exports
 
@@ -23039,20 +23040,16 @@ var CommentBox = function (_React$Component2) {
           _react2.default.createElement(
             "div",
             { className: "form-group" },
+            _react2.default.createElement("textarea", { className: "form-control", cols: "3", rows: "6", id: "inp", onChange: this._onChange.bind(this), value: this.state.value }),
             _react2.default.createElement(
-              "div",
-              { className: "col-md-6 col-sm-6" },
-              _react2.default.createElement("textarea", { className: "form-control", cols: "3", rows: "6", id: "inp", onChange: this._onChange.bind(this), value: this.state.value }),
-              _react2.default.createElement(
-                "button",
-                { type: "submit", disabled: this.state.value ? '' : 'disabled', className: "btn btn-success btn-sm" },
-                "Post"
-              ),
-              _react2.default.createElement(
-                "button",
-                { type: "button", className: "btn btn-danger btn-sm", onClick: this._onClickClear.bind(this) },
-                "Clear"
-              )
+              "button",
+              { type: "submit", disabled: this.state.value ? '' : 'disabled', className: "btn btn-success btn-sm" },
+              "Post"
+            ),
+            _react2.default.createElement(
+              "button",
+              { type: "button", className: "btn btn-danger btn-sm", onClick: this._onClickClear.bind(this) },
+              "Clear"
             )
           )
         )
@@ -23072,7 +23069,11 @@ var CommentLabel = function CommentLabel(props) {
     _react2.default.createElement(
       "div",
       { className: "user-label" },
-      props.author
+      _react2.default.createElement(
+        "a",
+        { href: props.home },
+        props.author
+      )
     )
   );
 };

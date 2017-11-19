@@ -8,7 +8,8 @@ import {CommentContainer}  from "./components.jsx";
 const curUser = {
     author: "curUser",
     avatar: '',
-    text: "sometext"
+    text: "sometext",
+    home:"http://www.example.com"
 }
 
 ReactDOM.render(
